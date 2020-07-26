@@ -1,0 +1,16 @@
+<toolSet name="External Tools">
+  <tool name="cargo build" description="Build with Rust nightly via Cargo" showInMainMenu="false" showInEditor="false" showInProject="false" showInSearchPopup="false" disabled="false" useConsole="true" showConsoleOnStdOut="true" showConsoleOnStdErr="true" synchronizeAfterRun="true">
+    <exec>
+      <option name="COMMAND" value="cargo" />
+      <option name="PARAMETERS" value="build" />
+      <option name="WORKING_DIRECTORY" value="~/builds/derust" />
+    </exec>
+  </tool>
+  <tool name="cargo clean" description="Clean sources with Cargo" showInMainMenu="false" showInEditor="false" showInProject="false" showInSearchPopup="false" disabled="false" useConsole="true" showConsoleOnStdOut="true" showConsoleOnStdErr="true" synchronizeAfterRun="true">
+    <exec>
+      <option name="COMMAND" value="cargo" />
+      <option name="PARAMETERS" value="clean" />
+      <option name="WORKING_DIRECTORY" value="~/builds/derust" />
+    </exec>
+  </tool>
+</toolSet>
