@@ -5,7 +5,9 @@
       <w>emojis</w>
       <w>nitro</w>
       <w>nsfw</w>
+      <w>ratelimited</w>
       <w>requalified</w>
+      <w>serde</w>
       <w>webhook</w>
       <w>webhooks</w>
     </words>

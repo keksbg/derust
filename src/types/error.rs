@@ -1,4 +1,9 @@
-pub enum HttpError {
-    BadRequest = 400,
+use serde::{Serialize, Deserialize};
 
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
+pub enum DerustError {
+    UnknownError,
+    HttpError,
+    NoPermissions,
+    InvalidToken,
 }

@@ -1,13 +1,14 @@
 use serde::{Serialize, Deserialize};
 use super::guild::GuildMember;
+use crate::types::Snowflake;
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct VoiceState {
-    pub(crate) guild_id: Option<String>,
-    pub(crate) channel_id: String,
-    pub(crate) user_id: String,
+    pub(crate) guild_id: Option<Snowflake>,
+    pub(crate) channel_id: Snowflake,
+    pub(crate) user_id: Snowflake,
     pub(crate) member: Option<GuildMember>,
-    pub(crate) session_id: String,
+    pub(crate) session_id: Snowflake,
     pub(crate) deaf: bool,
     pub(crate) mute: bool,
     pub(crate) self_deaf: bool,
@@ -17,9 +18,9 @@ pub struct VoiceState {
     pub(crate) suppress: bool,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct VoiceRegion {
-    pub(crate) id: String,
+    pub(crate) id: Snowflake,
     pub(crate) name: String,
     pub(crate) vip: bool,
     pub(crate) optimal: bool,

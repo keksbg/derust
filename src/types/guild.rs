@@ -1,32 +1,28 @@
 use super::user::User;
-use chrono::prelude::*;
 use serde::{Serialize, Deserialize};
 use super::role::Role;
 use super::message::Emoji;
 use super::voice::VoiceState;
 use super::channel::Channel;
-use super::gateway::PresenceUpdate;
-use super::channel::DerustError;
-use std::any::TypeId;
-use serde_json::Value;
-use crate::API_URL;
-use crate::types::permission::PermissionOverride;
+use super::gateway::activity::PresenceUpdate;
+use super::permission::PermissionOverwrite;
+use crate::types::{Snowflake, Timestamp};
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct Guild {
-    pub(crate) id: String,
+    pub(crate) id: Snowflake,
     pub(crate) name: String,
     pub(crate) icon: String,
     pub(crate) splash: String,
     pub(crate) discovery_splash: String,
     pub(crate) owner: Option<bool>,
-    pub(crate) owner_id: String,
+    pub(crate) owner_id: Snowflake,
     pub(crate) permissions: Option<i32>, //todo: replace with proper permissions
     pub(crate) region: String,
-    pub(crate) afk_channel_id: String,
+    pub(crate) afk_channel_id: Snowflake,
     pub(crate) afk_timeout: i32,
     pub(crate) embed_enabled: Option<bool>,
-    pub(crate) embed_channel_id: Option<String>,
+    pub(crate) embed_channel_id: Option<Snowflake>,
     pub(crate) verification_level: VerificationLevel,
     pub(crate) default_message_notifications: i32,
     pub(crate) explicit_content_filter: ExplicitFilterLevel,
@@ -35,13 +31,13 @@ pub struct Guild {
     /// See https://discord.com/developers/docs/resources/guild#guild-object-guild-features
     pub(crate) features: Vec<String>,
     pub(crate) mfa_level: MFALevel,
-    pub(crate) application_id: String,
+    pub(crate) application_id: Snowflake,
     pub(crate) widget_enabled: Option<bool>,
-    pub(crate) widget_channel_id: Option<String>,
-    pub(crate) system_channel_id: String,
+    pub(crate) widget_channel_id: Option<Snowflake>,
+    pub(crate) system_channel_id: Snowflake,
     pub(crate) system_channel_flags: i32,
-    pub(crate) rules_channel_id: String,
-    pub(crate) joined_at: Option<String>, // utc time
+    pub(crate) rules_channel_id: Snowflake,
+    pub(crate) joined_at: Option<Timestamp>, // utc time
     pub(crate) large: Option<bool>,
     pub(crate) unavailable: Option<bool>,
     pub(crate) member_count: Option<i32>,
@@ -57,33 +53,13 @@ pub struct Guild {
     pub(crate) premium_tier: i32,
     pub(crate) premium_subscription_count: Option<i32>,
     pub(crate) preferred_locale: String,
-    pub(crate) public_updates_channel_id: String,
+    pub(crate) public_updates_channel_id: Snowflake,
     pub(crate) max_video_channel_users: Option<i32>,
     pub(crate) approximate_member_count: Option<i32>,
     pub(crate) approximate_presence_count: Option<i32>,
 }
 
-impl Guild {
-    async fn getAuditLogs(&self, user_id: Option<String>, action_type: AuditLogType) -> Result<AuditLog, DerustError> {
-        let req = reqwest::get(
-            format!("{}/guilds/{}/audit-logs", API_URL, &self.id)
-        ).await;
-        match req {
-            Ok(v) => {
-                if v.status() == 200 {
-                    v.json::<AuditLog>()
-                } else {
-
-                }
-            },
-            Err(e) => {
-
-            }
-        }
-    }
-}
-
-#[derive(Deserialize, Serialize, Clone, Debug)]
+#[derive(Deserialize, Serialize, Clone, Debug, Eq, PartialEq)]
 pub enum VerificationLevel {
     None = 0,
     Low = 1,
@@ -92,31 +68,31 @@ pub enum VerificationLevel {
     VeryHigh = 4,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub enum ExplicitFilterLevel {
     Disabled = 0,
     MembersWithoutRoles = 1,
     AllMembers = 2,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub enum MFALevel {
     Disabled = 0,
     Elevated = 1,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct GuildMember {
     pub(crate) user: User,
     pub(crate) nick: Option<String>,
-    pub(crate) roles: Vec<String>, // todo: make it actually use snowflake objects
-    pub(crate) joined_at: Option<String>, // todo: make them use a timestamp object
+    pub(crate) roles: Vec<Snowflake>,
+    pub(crate) joined_at: Option<Timestamp>,
     pub(crate) premium_since: Option<String>,
     pub(crate) deaf: bool,
     pub(crate) mute: bool,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct AuditLog {
     pub(crate) webhooks: Vec<Webhook>,
     pub(crate) users: Vec<User>,
@@ -124,27 +100,27 @@ pub struct AuditLog {
     pub(crate) integrations: Vec<Integration>,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct Webhook {
-    pub(crate) id: String, //todo: replace with snowflake object
+    pub(crate) id: Snowflake,
     pub(crate) r#type: WebhookType,
-    pub(crate) guild_id: Option<String>,
-    pub(crate) channel_id: String,
+    pub(crate) guild_id: Option<Snowflake>,
+    pub(crate) channel_id: Snowflake,
     pub(crate) user: Option<User>,
     pub(crate) name: String,
     pub(crate) avatar: String,
     pub(crate) token: Option<String>,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub enum WebhookType {
     Incoming = 1,
     ChannelFollower = 2,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct Integration {
-    pub(crate) id: String, //todo: replace with snowflake object
+    pub(crate) id: Snowflake,
     pub(crate) name: String,
     pub(crate) r#type: String,
     pub(crate) enabled: bool,
@@ -155,33 +131,33 @@ pub struct Integration {
     pub(crate) expire_grace_period: i32,
     pub(crate) user: User,
     pub(crate) account: IntegrationAccount,
-    pub(crate) synced_at: String, // todo: replace with ISO8601 timestamp
+    pub(crate) synced_at: Timestamp,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub enum IntegrationExpireBehavior {
     RemoveRole = 0,
     Kick = 1,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct IntegrationAccount {
-    pub(crate) id: String,
+    pub(crate) id: Snowflake,
     pub(crate) name: String,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct AuditLogEntry {
-    pub(crate) target_id: String,
+    pub(crate) target_id: Snowflake,
     pub(crate) changes: Option<Vec<AuditLogChange>>,
-    pub(crate) user_id: String,
-    pub(crate) id: String,
+    pub(crate) user_id: Snowflake,
+    pub(crate) id: Snowflake,
     pub(crate) action_type: AuditLogEvent,
     pub(crate) options: Option<OptionalAuditLogEntry>,
     pub(crate) reason: Option<String>,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub enum AuditLogEvent {
     GuildUpdate = 1,
     ChannelCreate = 10,
@@ -220,30 +196,33 @@ pub enum AuditLogEvent {
     DeleteIntegration = 82,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct OptionalAuditLogEntry {
     pub(crate) delete_member_days: String,
     pub(crate) members_removed: String,
-    pub(crate) channel_id: String, //todo: replace with snowflake object
-    pub(crate) message_id: String,
+    pub(crate) channel_id: Snowflake,
+    pub(crate) message_id: Snowflake,
     pub(crate) count: String,
-    pub(crate) id: String,
+    pub(crate) id: Snowflake,
     pub(crate) r#type: String,
     pub(crate) role_name: String,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct AuditLogChange {
     pub(crate) new_value: Option<MixedType>,
     pub(crate) old_value: Option<MixedType>,
     pub(crate) key: String,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
+#[serde(untagged)]
 pub enum MixedType {
-    Str(String),
-    Int(i32),
-    RoleVec(Vec<Role>),
-    Bool(bool),
-    OverwriteVec(Vec<PermissionOverride>),
+    String(Option<String>),
+    U8(Option<u8>),
+    AuditLogEvent(Option<AuditLogEvent>),
+    Int(Option<i32>),
+    RoleVec(Option<Vec<Role>>),
+    Bool(Option<bool>),
+    OverwriteVec(Option<Vec<PermissionOverwrite>>),
 }

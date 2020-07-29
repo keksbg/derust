@@ -1,14 +1,15 @@
 use serde::{Serialize, Deserialize};
+use crate::types::Snowflake;
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct PermissionOverride {
-    pub(crate) id: String,
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
+pub struct PermissionOverwrite {
+    pub(crate) id: Snowflake,
     pub(crate) r#type: String,
     pub(crate) allow: i32,
     pub(crate) deny: i32,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub enum Permissions {
     SendMessage = 1 << 0,
     KickMembers = 1 << 1,

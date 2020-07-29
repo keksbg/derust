@@ -1,14 +1,16 @@
 use serde::{Serialize, Deserialize};
-use super::channel::{Channel, DerustError};
+use super::channel::Channel;
+use super::error::DerustError;
 use tracing::{instrument, error};
 use crate::API_URL;
 use super::channel::CreatePrivateChannelBody;
+use crate::types::Snowflake;
 
 /// This represents the basic user structure
 /// that is returned by the Discord API.
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct User {
-    pub(crate) id: String,
+    pub(crate) id: Snowflake,
     pub(crate) username: String,
     pub(crate) discriminator: String,
     pub(crate) avatar: String,
@@ -19,14 +21,14 @@ pub struct User {
     pub(crate) public_flags: i64,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub enum PremiumType {
     None = 0,
     NitroClassic = 1,
     Nitro = 2,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub enum PublicFlags {
     None = 0,
     Employee = 1 << 0,
@@ -46,7 +48,7 @@ pub enum PublicFlags {
 
 impl User {
     #[instrument]
-    async fn createPrivateChannel(&self) -> Result<Channel, DerustError> {
+    async fn create_private_channel(&self) -> Result<Channel, DerustError> {
         let resp = reqwest::Client::new()
             .post(format!("{}/users/@me/channels", API_URL).as_str())
             .json(
@@ -63,10 +65,5 @@ impl User {
                 Err(DerustError::UnknownError)
             }
         }
-    }
-    /// This function will return a u64 containing the user ID, since
-    /// Discord provides it as a string.
-    async fn getId(&self) -> u64 {
-        self.id.parse::<u64>().unwrap()
     }
 }

@@ -2,8 +2,9 @@ use super::guild::Guild;
 use super::channel::Channel;
 use super::user::User;
 use serde::{Deserialize};
+use crate::types::Snowflake;
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct Invite {
     pub(crate) code: String,
     pub(crate) guild: Option<Guild>,
@@ -15,16 +16,16 @@ pub struct Invite {
     pub(crate) approximate_member_count: Option<i32>,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub enum TargetUserType {
     Stream = 1,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct InviteMetadata {
     pub(crate) uses: i32,
     pub(crate) max_uses: i32,
     pub(crate) max_age: i32,
     pub(crate) temporary: bool,
-    pub(crate) created_at: String, // todo: replace with timestamp object
+    pub(crate) created_at: Snowflake,
 }

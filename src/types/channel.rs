@@ -1,32 +1,33 @@
 use super::user::User;
-use super::permission::PermissionOverride;
+use super::permission::PermissionOverwrite;
 use serde::{Serialize, Deserialize};
+use crate::types::Snowflake;
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct Channel {
-    pub(crate) id: String,
+    pub(crate) id: Snowflake,
     pub(crate) r#type: ChannelType,
-    pub(crate) guild_id: Option<String>,
+    pub(crate) guild_id: Option<Snowflake>,
     pub(crate) position: Option<u16>,
-    pub(crate) permission_overwrites: Option<Vec<PermissionOverride>>,
+    pub(crate) permission_overwrites: Option<Vec<PermissionOverwrite>>,
     pub(crate) name: Option<String>,
     pub(crate) topic: Option<String>,
     pub(crate) nsfw: bool,
-    pub(crate) last_message_id: Option<String>,
+    pub(crate) last_message_id: Option<Snowflake>,
     pub(crate) bitrate: Option<u16>,
     pub(crate) user_limit: Option<u16>,
     pub(crate) rate_limit_per_user: Option<u16>,
     pub(crate) recipients: Option<Vec<User>>,
     pub(crate) icon: Option<String>,
-    pub(crate) owner_id: Option<String>,
-    pub(crate) application_id: Option<String>,
-    pub(crate) parent_id: Option<String>,
+    pub(crate) owner_id: Option<Snowflake>,
+    pub(crate) application_id: Option<Snowflake>,
+    pub(crate) parent_id: Option<Snowflake>,
     pub(crate) last_pin_timestamp: Option<String>
 }
 
 /// All the different channel types that correspond
 /// to the integer returned by the Discord API
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub enum ChannelType {
     /// Text Channel in a Guild
     GuildText = 0,
@@ -44,20 +45,16 @@ pub enum ChannelType {
     GuildStore = 6,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct ChannelMention {
-    pub(crate) id: String,
-    pub(crate) guild_id: String,
+    pub(crate) id: Snowflake,
+    pub(crate) guild_id: Snowflake,
     pub(crate) r#type: ChannelType,
     pub(crate) name: String,
 }
 
-#[derive(Serialize, Clone, Debug)]
+#[derive(Serialize, Clone, Debug, Eq, PartialEq)]
 pub(crate) struct CreatePrivateChannelBody {
-    pub recipient_id: String
+    pub recipient_id: Snowflake
 }
 
-#[derive(Deserialize, Clone, Debug)]
-pub enum DerustError {
-    UnknownError,
-}

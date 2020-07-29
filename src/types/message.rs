@@ -3,10 +3,11 @@ use super::guild::GuildMember;
 use super::channel::ChannelMention;
 use serde::{Serialize, Deserialize};
 use super::role::Role;
+use crate::types::{Snowflake, Timestamp};
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct MentionedUsers {
-    pub(crate) id: String,
+    pub(crate) id: Snowflake,
     pub(crate) username: String,
     pub(crate) discriminator: String,
     pub(crate) avatar: String,
@@ -18,16 +19,16 @@ pub struct MentionedUsers {
     pub(crate) member: GuildMember,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct Message {
-    pub(crate) id: String,
-    pub(crate) channel_id: String,
-    pub(crate) guild_id: Option<String>,
+    pub(crate) id: Snowflake,
+    pub(crate) channel_id: Snowflake,
+    pub(crate) guild_id: Option<Snowflake>,
     pub(crate) author: User,
     pub(crate) member: GuildMember,
     pub(crate) content: String,
-    pub(crate) timestamp: String,
-    pub(crate) edited_timestamp: Option<String>,
+    pub(crate) timestamp: Timestamp,
+    pub(crate) edited_timestamp: Option<Timestamp>,
     pub(crate) tts: bool,
     pub(crate) mention_everyone: bool,
     pub(crate) mentions: Vec<MentionedUsers>,
@@ -38,7 +39,7 @@ pub struct Message {
     pub(crate) reactions: Vec<MessageReaction>,
     pub(crate) nonce: Option<String>,
     pub(crate) pinned: bool,
-    pub(crate) webhook_id: Option<String>,
+    pub(crate) webhook_id: Option<Snowflake>,
     pub(crate) r#type: MessageType,
     pub(crate) activity: Option<MessageActivity>,
     pub(crate) application: Option<MessageApplication>,
@@ -46,20 +47,20 @@ pub struct Message {
     pub(crate) flags: Option<i32>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct MessageReaction {
     pub(crate) count: i32,
     pub(crate) me: bool,
     pub(crate) emoji: Emoji,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct MessageActivity {
     pub(crate) r#type: MessageActivityType,
-    pub(crate) party_id: Option<String>,
+    pub(crate) party_id: Option<Snowflake>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub enum MessageActivityType {
     Join = 1,
     Spectate = 2,
@@ -67,7 +68,7 @@ pub enum MessageActivityType {
     JoinRequest = 5
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub enum MessageType {
     Default = 0,
     AddRecipient = 1,
@@ -86,34 +87,31 @@ pub enum MessageType {
     GuildDiscoveryRequalified = 15,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct MessageApplication {
-    pub(crate) id: String,
+    pub(crate) id: Snowflake,
     pub(crate) cover_image: Option<String>,
     pub(crate) description: String,
     pub(crate) icon: Option<String>,
     pub(crate) name: String
 }
 
-//todo: change all of this to fucking snowflakes
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct MessageReference {
-    pub(crate) message_id: String,
-    pub(crate) channel_id: String,
-    pub(crate) guild_id: String,
+    pub(crate) message_id: Snowflake,
+    pub(crate) channel_id: Snowflake,
+    pub(crate) guild_id: Snowflake,
 }
 
 pub struct AllowedMentions {
     pub(crate) parse: Vec<String>,
-    //todo: replace with snowflake
-    pub(crate) roles: Vec<String>,
-    //todo: same here
-    pub(crate) users: Vec<String>,
+    pub(crate) roles: Vec<Snowflake>,
+    pub(crate) users: Vec<Snowflake>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct Attachment {
-    pub(crate) r#id: String,
+    pub(crate) id: Snowflake,
     pub(crate) filename: String,
     pub(crate) size: i32,
     pub(crate) url: String,
@@ -122,13 +120,13 @@ pub struct Attachment {
     pub(crate) width: i32,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct Embed {
     pub(crate) title: Option<String>,
     pub(crate) r#type: Option<String>,
     pub(crate) description: Option<String>,
     pub(crate) url: Option<String>,
-    pub(crate) timestamp: Option<String>,
+    pub(crate) timestamp: Option<Timestamp>,
     pub(crate) color: Option<i32>,
     pub(crate) footer: Option<Vec<EmbedFooter>>,
     pub(crate) image: Option<EmbedImage>,
@@ -139,14 +137,14 @@ pub struct Embed {
     pub(crate) fields: Vec<EmbedField>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct EmbedFooter {
     pub(crate) text: String,
     pub(crate) icon_url: Option<String>,
     pub(crate) proxy_icon_url: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct EmbedImage {
     pub(crate) url: Option<String>,
     pub(crate) proxy_url: Option<String>,
@@ -154,13 +152,13 @@ pub struct EmbedImage {
     pub(crate) width: Option<i32>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct EmbedProvider {
     pub(crate) name: Option<String>,
     pub(crate) url: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct EmbedAuthor {
     pub(crate) name: Option<String>,
     pub(crate) url: Option<String>,
@@ -168,14 +166,14 @@ pub struct EmbedAuthor {
     pub(crate) proxy_icon_url: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct EmbedField {
     pub(crate) name: String,
     pub(crate) value: String,
     pub(crate) inline: Option<bool>
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct EmbedThumbnail {
     pub(crate) url: Option<String>,
     pub(crate) proxy_url: Option<String>,
@@ -183,16 +181,16 @@ pub struct EmbedThumbnail {
     pub(crate) width: Option<i32>
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct EmbedVideo {
     pub(crate) url: Option<String>,
     pub(crate) height: Option<i32>,
     pub(crate) width: Option<i32>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct Emoji {
-    pub(crate) id: String,
+    pub(crate) id: Snowflake,
     pub(crate) name: String,
     pub(crate) roles: Option<Role>,
     pub(crate) user: Option<User>,
