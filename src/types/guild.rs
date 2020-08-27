@@ -7,6 +7,7 @@ use super::channel::Channel;
 use super::gateway::activity::PresenceUpdate;
 use super::permission::PermissionOverwrite;
 use crate::types::{Snowflake, Timestamp};
+use super::CachedTypes;
 
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct Guild {
@@ -59,6 +60,8 @@ pub struct Guild {
     pub(crate) approximate_presence_count: Option<i32>,
 }
 
+impl CachedTypes for Guild {}
+
 #[derive(Deserialize, Serialize, Clone, Debug, Eq, PartialEq)]
 pub enum VerificationLevel {
     None = 0,
@@ -91,6 +94,8 @@ pub struct GuildMember {
     pub(crate) deaf: bool,
     pub(crate) mute: bool,
 }
+
+impl CachedTypes for GuildMember {}
 
 #[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct AuditLog {
@@ -225,4 +230,10 @@ pub enum MixedType {
     RoleVec(Option<Vec<Role>>),
     Bool(Option<bool>),
     OverwriteVec(Option<Vec<PermissionOverwrite>>),
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq)] // serialize required because of enum in gateway/payloads.rs
+pub struct PartialGuild {
+    id: Snowflake,
+    unavailable: bool,
 }

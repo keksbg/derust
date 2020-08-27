@@ -1,11 +1,15 @@
 <component name="ProjectDictionaryState">
   <dictionary name="User">
     <words>
+      <w>binaryheap</w>
+      <w>cacheable</w>
       <w>derust</w>
       <w>emojis</w>
       <w>nitro</w>
       <w>nsfw</w>
+      <w>opcode</w>
       <w>ratelimited</w>
+      <w>reidentify</w>
       <w>requalified</w>
       <w>serde</w>
       <w>webhook</w>

@@ -14,12 +14,6 @@
 //! will be sent and/or received from the gateway. It also contains
 //! builders from which you are able to construct basic objects required
 //! to initialize a connection to the gateway.
-//!
-//! If you only need the basic types, you can do a simple
-//! ```rust
-//! use derust::prelude;
-//! // your own code here
-//! ```
 use serde::{Serialize, Deserialize};
 use chrono::{DateTime, Utc};
 
@@ -38,7 +32,7 @@ pub mod guild;
 /// it is returned as a String by the Discord API.
 ///
 /// Try to use it whenever possible.
-#[derive(Serialize, Deserialize, Debug, Clone, Eq, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, Eq, PartialEq, Hash)]
 pub struct Snowflake(#[serde(with = "type_string")] pub u64);
 /// Automatic conversion from String into a DateTime struct,
 /// because the API returns time as a String formatted as
@@ -74,3 +68,15 @@ pub(crate) mod type_string {
             .map_err(DeError::custom)
     }
 }
+
+/// Trait for all the types that are cacheable in the library.
+///
+/// Current cached objects: [`Guild`], [`GuildMember`], [`User`],
+/// [`Channel`], [`VoiceState`]
+///
+/// [`Guild`]: guild::Guild
+/// [`GuildMember`]: guild::GuildMember
+/// [`User`]: user::User
+/// [`Channel`]: channel::Channel
+/// [`VoiceState`]: voice::VoiceState
+pub trait CachedTypes {}

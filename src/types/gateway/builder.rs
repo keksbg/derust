@@ -1,9 +1,8 @@
 use serde::Serialize;
 use crate::types::gateway::activity::{StatusUpdate};
-use tracing::warn;
 use enumflags2::BitFlags;
 
-#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
+#[derive(Serialize, Deserialize, Eq, PartialEq)]
 pub struct IdentifyObject {
     token: String,
     properties: IdentifyProperties,
@@ -13,9 +12,11 @@ pub struct IdentifyObject {
     presence: Option<StatusUpdate>,
     guild_subscriptions: Option<bool>,
     intents: Option<u32>,
+    #[serde(skip)]
+    auto_reidentify: bool,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
+#[derive(Serialize, Deserialize, Eq, PartialEq)]
 pub struct IdentifyProperties {
     #[serde(rename = "$os")]
     os: String,
@@ -27,7 +28,8 @@ pub struct IdentifyProperties {
 
 impl IdentifyObject {
     /// Construct a new `IdentifyObject` with the default values
-    /// which are specified in the [Discord developer documentation](https://discord.dev/)
+    /// which are specified in the [Discord developer documentation](https://discord.dev/),
+    /// the only exception being that we enable compression,
     /// and the specified token.
     pub fn new(token: String) -> Self {
         Self {
@@ -37,16 +39,19 @@ impl IdentifyObject {
                 browser: String::from("derust"),
                 device: String::from("derust"),
             },
-            compress: false,
+            compress: true,
             large_threshold: None,
             shard: None,
             presence: None,
             guild_subscriptions: None,
             intents: None,
+            auto_reidentify: false,
         }
     }
     /// Whether or not to use zlib compression (achieved with
     /// the [`miniz_oxide`](https://docs.rs/miniz_oxide/) crate)
+    ///
+    /// Default: true
     ///
     /// Note: This only impacts the server's ability to
     /// compress, we are only decompressing and sending
@@ -61,19 +66,29 @@ impl IdentifyObject {
     /// ```rust
     /// use derust::types::gateway::builder::{Intents, IdentifyObject};
     /// use enumflags2::BitFlags;
-    /// let mut intents = BitFlags::from_flag(Intents::GuildMessages);
-    /// intents.insert(Intents::DirectMessages);
-    /// let mut identify = IdentifyObject::new(String::from("token here"))
-    ///     .intents(intents.bits());
+    ///
+    /// #[tokio::main]
+    /// async fn main() {
+    ///     let mut intents = BitFlags::from_flag(Intents::GuildMessages);
+    ///     intents.insert(Intents::DirectMessages);
+    ///     let mut identify = IdentifyObject::new(String::from("token here"))
+    ///         .intents(intents.bits());
+    /// }
     /// ```
     /// Or it is also possible to do:
     /// ```rust
     /// use derust::types::gateway::builder::{Intents, IdentifyObject};
     /// use enumflags2::BitFlags;
-    /// let mut intents = BitFlags::from_bits(0b010010); // GuildMembers and GuildIntegrations
-    /// let mut identify = IdentifyObject::new(String::from("token here"))
-    ///     .intents(intents.bits().try_into().unwrap()); // you should probably never unwrap this, instead use something like the ? shorthand
+    ///
+    /// #[tokio::main]
+    /// async fn main() {
+    ///     let mut intents = BitFlags::from_bits(0b010010); // GuildMembers and GuildIntegrations
+    ///     let mut identify = IdentifyObject::new(String::from("token here"))
+    ///         .intents(intents.bits().try_into().unwrap()); // you should probably never unwrap this, instead use something like the ? shorthand
+    /// }
     /// ```
+    ///
+    /// Default: none
     pub fn intents(&mut self, intents: u32) -> &mut Self {
         self.intents = Some(intents);
         self
@@ -82,7 +97,9 @@ impl IdentifyObject {
     /// The presence that will be sent on the gateway IDENTIFY OPCode,
     /// which will be displayed until modified manually later on in code.
     ///
-    /// To construct it, use the [`PresenceBuilder`].
+    /// To construct it, use the [`StatusUpdate::new`] builder.
+    ///
+    /// Default: none
     pub fn presence(&mut self, presence: StatusUpdate) -> &mut Self {
         self.presence = Some(presence);
         self
@@ -93,13 +110,12 @@ impl IdentifyObject {
     /// or equal value to the one specified.
     ///
     /// Must be between 50 and 250, otherwise the default of 50
-    /// will be applied and a warning message will be shown.
+    /// will be used.
     pub fn large_threshold(&mut self, threshold: u8) -> &mut Self {
         if threshold >= 50 && threshold <= 250 {
             self.large_threshold = Some(threshold);
             self
         } else {
-            warn!("Invalid `large_threshold` value given. Using default of 50.");
             self
         }
     }
@@ -111,14 +127,24 @@ impl IdentifyObject {
         self.guild_subscriptions = Some(choice);
         self
     }
+
+    /// Whether or not to automatically re-identify once the session has been attempted to be
+    /// resumed, but it failed and we were requested to re-identify completely.
+    ///
+    /// Default: `false`
+    pub fn auto_reidentify(&mut self, choice: bool) -> &mut Self {
+        self.auto_reidentify = choice;
+        self
+    }
+
 }
 
 /// For a definition of all the enum values, see
 /// the [developer documentation](https://discord.com/developers/docs/topics/gateway#gateway-intents).
 ///
 /// Pay careful attention to `GuildPresences` and
-/// `GuildMembers` because they are privileged intents.
-#[derive(Serialize, BitFlags, Copy, Clone, Debug, PartialEq, Eq)]
+/// `GuildMembers` because they are **privileged** intents.
+#[derive(Serialize, BitFlags, Clone, Copy, PartialEq, Eq)]
 #[repr(u16)]
 pub enum Intents {
     Guilds = 1 << 0,
@@ -135,5 +161,5 @@ pub enum Intents {
     GuildMessageTyping = 1 << 11,
     DirectMessages = 1 << 12,
     DirectMessageReactions = 1 << 13,
-    DirectMessageTying = 1 << 14,
+    DirectMessageTyping = 1 << 14,
 }

@@ -1,6 +1,7 @@
 use serde::{Serialize, Deserialize};
 use super::guild::GuildMember;
 use crate::types::Snowflake;
+use super::CachedTypes;
 
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct VoiceState {
@@ -17,6 +18,8 @@ pub struct VoiceState {
     pub(crate) self_video: bool,
     pub(crate) suppress: bool,
 }
+
+impl CachedTypes for VoiceState {}
 
 #[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct VoiceRegion {

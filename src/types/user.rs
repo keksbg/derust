@@ -1,10 +1,10 @@
 use serde::{Serialize, Deserialize};
 use super::channel::Channel;
 use super::error::DerustError;
-use tracing::{instrument, error};
 use crate::API_URL;
 use super::channel::CreatePrivateChannelBody;
 use crate::types::Snowflake;
+use super::CachedTypes;
 
 /// This represents the basic user structure
 /// that is returned by the Discord API.
@@ -20,6 +20,8 @@ pub struct User {
     pub(crate) premium_type: PremiumType,
     pub(crate) public_flags: i64,
 }
+
+impl CachedTypes for User {}
 
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub enum PremiumType {
@@ -47,8 +49,7 @@ pub enum PublicFlags {
 }
 
 impl User {
-    #[instrument]
-    async fn create_private_channel(&self) -> Result<Channel, DerustError> {
+    pub async fn create_private_channel(&self) -> Result<Channel, DerustError> {
         let resp = reqwest::Client::new()
             .post(format!("{}/users/@me/channels", API_URL).as_str())
             .json(
@@ -60,8 +61,7 @@ impl User {
             Ok(v) => {
                 Ok(v.json::<Channel>().await.unwrap())
             },
-            Err(e) => {
-                error!("Encountered error during sending of request: {}", e);
+            Err(_) => {
                 Err(DerustError::UnknownError)
             }
         }

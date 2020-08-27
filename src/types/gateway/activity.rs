@@ -86,15 +86,55 @@ pub enum ActivityFlags {
     Play = 1 << 5,
 }
 
+/// The `StatusUpdate` struct represents structs
+/// that will be used by the client to send to the
+/// server a status update, such as playing a different
+/// game and/or other things.
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct StatusUpdate {
-    /// This represents the timestamp since which the status
-    /// has been displayed.
-    since: Timestamp,
+    /// This represents the amount of time since which the client
+    /// is in an AFK state, or none.
+    since: Option<u64>, // unix timestamp in ms
     /// This is the activity object/game that is being displayed.
     game: Activity,
     /// This is the current status of the user. Correct values:
     /// `online`, `dnd`, `idle`, `invisible`, `offline`
     status: String,
     afk: bool,
+}
+
+impl StatusUpdate {
+    /// Method for constructing a new [`StatusUpdate`] object.
+    pub fn new(activity: Activity, status: Status) -> Self {
+        StatusUpdate {
+            since: None,
+            game: activity,
+            status: status.to_string(),
+            afk: false,
+        }
+    }
+}
+
+/// Possible statuses that can be sent to the API.
+///
+/// They are automatically converted into a string
+/// in the [`StatusUpdate::new`] function
+pub enum Status {
+    Online,
+    DND,
+    Idle,
+    Invisible,
+    Offline,
+}
+
+impl ToString for Status {
+    fn to_string(&self) -> String {
+        match self {
+            Status::Online => String::from("online"),
+            Status::DND => String::from("dnd"),
+            Status::Idle => String::from("idle"),
+            Status::Invisible => String::from("invisible"),
+            Status::Offline => String::from("offline"),
+        }
+    }
 }

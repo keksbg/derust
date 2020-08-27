@@ -9,3 +9,6 @@ pub mod builder;
 pub mod payloads;
 pub mod opcodes;
 pub mod activity;
+pub mod client;
+#[cfg(feature = "cache")]
+pub mod cache;

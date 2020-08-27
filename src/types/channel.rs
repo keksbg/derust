@@ -2,6 +2,7 @@ use super::user::User;
 use super::permission::PermissionOverwrite;
 use serde::{Serialize, Deserialize};
 use crate::types::Snowflake;
+use super::CachedTypes;
 
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct Channel {
@@ -24,6 +25,8 @@ pub struct Channel {
     pub(crate) parent_id: Option<Snowflake>,
     pub(crate) last_pin_timestamp: Option<String>
 }
+
+impl CachedTypes for Channel {}
 
 /// All the different channel types that correspond
 /// to the integer returned by the Discord API
