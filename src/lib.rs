@@ -8,17 +8,20 @@
 //! ```rust
 //! use derust::types::gateway::builder::IdentifyObject;
 //! use derust::types::gateway::client::Client;
+//! use derust::types::gateway::cache::Caches;
 //! use enumflags2::BitFlags;
 //!
 //! #[tokio::main]
 //! async fn main() {
-//!     let io = IdentifyObject::new(String::from("token"))
+//! let io = IdentifyObject::new(String::from("token"))
 //!         .intents(BitFlags::from_bits(0b110010).unwrap().bits()) // guilds, guild members, guild integrations
 //!         .compress(true)
 //!         .large_threshold(250)
 //!         .guild_subscriptions(false);
 //!
-//!     let ws = Client::new(io)
+//!     let cache = Caches::initialize();
+//!
+//!     let ws = Client::new(io, cache)
 //!         .login();
 //!
 //!     while let Some(e) = ws.recv().await {
@@ -75,6 +78,6 @@
 #[macro_use] extern crate serde;
 
 pub mod types;
-pub mod helpers;
+mod helpers;
 static API_URL: &str = "https://discord.com/api/v6";
 static GATEWAY_URL: &str = "wss://gateway.discord.gg";

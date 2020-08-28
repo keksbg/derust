@@ -23,7 +23,7 @@ impl Client {
     /// you'd like to modify it to your needs or disable
     /// it.
     ///
-    /// [Cache]: cache::Caches
+    /// [`Cache`]: types::gateway::cache::Cache
     pub async fn new(io: &'static mut IdentifyObject, caches: Caches) -> Self {
         Self {
             url: String::from(crate::GATEWAY_URL),
