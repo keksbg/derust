@@ -13,7 +13,7 @@ pub struct Channel {
     pub(crate) permission_overwrites: Option<Vec<PermissionOverwrite>>,
     pub(crate) name: Option<String>,
     pub(crate) topic: Option<String>,
-    pub(crate) nsfw: bool,
+    pub(crate) nsfw: Option<bool>,
     pub(crate) last_message_id: Option<Snowflake>,
     pub(crate) bitrate: Option<u32>,
     pub(crate) user_limit: Option<u16>,
