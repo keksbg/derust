@@ -15,7 +15,7 @@ pub struct Channel {
     pub(crate) topic: Option<String>,
     pub(crate) nsfw: bool,
     pub(crate) last_message_id: Option<Snowflake>,
-    pub(crate) bitrate: Option<u16>,
+    pub(crate) bitrate: Option<u32>,
     pub(crate) user_limit: Option<u16>,
     pub(crate) rate_limit_per_user: Option<u16>,
     pub(crate) recipients: Option<Vec<User>>,
