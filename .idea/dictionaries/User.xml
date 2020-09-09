@@ -12,6 +12,7 @@
       <w>reidentify</w>
       <w>requalified</w>
       <w>serde</w>
+      <w>tokio</w>
       <w>webhook</w>
       <w>webhooks</w>
     </words>

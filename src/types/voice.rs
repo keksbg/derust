@@ -5,28 +5,29 @@ use super::CachedTypes;
 
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct VoiceState {
-    pub(crate) guild_id: Option<Snowflake>,
-    pub(crate) channel_id: Snowflake,
-    pub(crate) user_id: Snowflake,
-    pub(crate) member: Option<GuildMember>,
-    pub(crate) session_id: Snowflake,
-    pub(crate) deaf: bool,
-    pub(crate) mute: bool,
-    pub(crate) self_deaf: bool,
-    pub(crate) self_mute: bool,
-    pub(crate) self_stream: Option<bool>,
-    pub(crate) self_video: bool,
-    pub(crate) suppress: bool,
+    pub guild_id: Option<Snowflake>,
+    pub channel_id: Snowflake,
+    pub user_id: Snowflake,
+    pub member: Option<GuildMember>,
+    pub session_id: Snowflake,
+    pub deaf: bool,
+    pub mute: bool,
+    pub self_deaf: bool,
+    pub self_mute: bool,
+    #[serde(default)]
+    pub self_stream: bool,
+    pub self_video: bool,
+    pub suppress: bool,
 }
 
 impl CachedTypes for VoiceState {}
 
 #[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct VoiceRegion {
-    pub(crate) id: Snowflake,
-    pub(crate) name: String,
-    pub(crate) vip: bool,
-    pub(crate) optimal: bool,
-    pub(crate) deprecated: bool,
-    pub(crate) custom: bool,
+    pub id: Snowflake,
+    pub name: String,
+    pub vip: bool,
+    pub optimal: bool,
+    pub deprecated: bool,
+    pub custom: bool,
 }

@@ -3,10 +3,10 @@ use crate::types::Snowflake;
 
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct PermissionOverwrite {
-    pub(crate) id: Snowflake,
-    pub(crate) r#type: String,
-    pub(crate) allow: i32,
-    pub(crate) deny: i32,
+    pub id: Snowflake,
+    pub r#type: String,
+    pub allow: i32,
+    pub deny: i32,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]

@@ -2,28 +2,29 @@ use serde::Serialize;
 use crate::types::gateway::activity::{StatusUpdate};
 use enumflags2::BitFlags;
 
-#[derive(Serialize, Deserialize, Eq, PartialEq)]
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug)]
 pub struct IdentifyObject {
-    token: String,
-    properties: IdentifyProperties,
-    compress: bool,
-    large_threshold: Option<u8>,
-    shard: Option<Vec<u8>>,
-    presence: Option<StatusUpdate>,
-    guild_subscriptions: Option<bool>,
-    intents: Option<u32>,
+    pub token: String,
+    pub properties: IdentifyProperties,
+    pub compress: bool,
+    pub large_threshold: Option<u8>,
+    pub shard: Option<Vec<u8>>,
+    pub presence: Option<StatusUpdate>,
+    #[serde(default)]
+    pub guild_subscriptions: bool,
+    pub intents: Option<u32>,
     #[serde(skip)]
-    auto_reidentify: bool,
+    pub auto_reidentify: bool,
 }
 
-#[derive(Serialize, Deserialize, Eq, PartialEq)]
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug)]
 pub struct IdentifyProperties {
     #[serde(rename = "$os")]
-    os: String,
+    pub os: String,
     #[serde(rename = "$browser")]
-    browser: String,
+    pub browser: String,
     #[serde(rename = "$device")]
-    device: String,
+    pub device: String,
 }
 
 impl IdentifyObject {
@@ -43,7 +44,7 @@ impl IdentifyObject {
             large_threshold: None,
             shard: None,
             presence: None,
-            guild_subscriptions: None,
+            guild_subscriptions: false,
             intents: None,
             auto_reidentify: false,
         }
@@ -124,7 +125,7 @@ impl IdentifyObject {
     /// events. Generally recommended to be set to false for larger bots,
     /// but it is set to true by default.
     pub fn guild_subscriptions(&mut self, choice: bool) -> &mut Self {
-        self.guild_subscriptions = Some(choice);
+        self.guild_subscriptions = choice;
         self
     }
 
@@ -135,6 +136,10 @@ impl IdentifyObject {
     pub fn auto_reidentify(&mut self, choice: bool) -> &mut Self {
         self.auto_reidentify = choice;
         self
+    }
+
+    pub fn token(&mut self) -> & str {
+        self.token.as_str()
     }
 
 }

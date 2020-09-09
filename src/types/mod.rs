@@ -32,7 +32,7 @@ pub mod guild;
 /// it is returned as a String by the Discord API.
 ///
 /// Try to use it whenever possible.
-#[derive(Serialize, Deserialize, Debug, Clone, Eq, PartialEq, Hash)]
+#[derive(Serialize, Deserialize, Debug, Clone, Eq, PartialEq, Hash, Copy)]
 pub struct Snowflake(#[serde(with = "type_string")] pub u64);
 /// Automatic conversion from String into a DateTime struct,
 /// because the API returns time as a String formatted as
@@ -40,7 +40,7 @@ pub struct Snowflake(#[serde(with = "type_string")] pub u64);
 ///
 /// Always use it as it is easier to work with compared to
 /// a standard string.
-#[derive(Serialize, Deserialize, Debug, Clone, Eq, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, Eq, PartialEq, Copy)]
 pub struct Timestamp(#[serde(with = "type_string")] pub DateTime<Utc>);
 
 pub(crate) mod type_string {

@@ -1,18 +1,24 @@
 use std::sync::Arc;
-use crate::types::guild::{Guild, GuildMember};
+use crate::types::guild::GuildMember;
 use crate::types::user::User;
 use crate::types::voice::VoiceState;
 use crate::types::channel::Channel;
 use std::collections::HashMap;
 use crate::types::{CachedTypes, Snowflake};
+use super::payloads::{DiscordEvent, GuildType};
 
+#[derive(Clone)]
 pub struct Caches {
-    guild_cache: Option<Arc<dyn Cache<Guild>>>,
+    guild_cache: Option<Arc<dyn Cache<GuildType>>>,
     user_cache: Option<Arc<dyn Cache<User>>>,
     member_cache: Option<Arc<dyn Cache<GuildMember>>>,
     voice_state_cache: Option<Arc<dyn Cache<VoiceState>>>,
     channel_cache: Option<Arc<dyn Cache<Channel>>>,
 }
+
+unsafe impl Sync for Caches {}
+
+unsafe impl Send for Caches {}
 
 impl Caches {
     pub async fn initialize() -> Self {
@@ -30,7 +36,7 @@ impl Caches {
     /// Default: `HashMap<Snowflake, Guild>` with no limits.
     pub async fn guild_cache(
         &mut self,
-        cache: Option<Arc<dyn Cache<Guild>>>
+        cache: Option<Arc<dyn Cache<GuildType>>>
     ) -> &mut Self
     {
         self.guild_cache = cache;
@@ -120,7 +126,6 @@ impl Caches {
 /// ```
 /// (this is the exact implementation used by us for
 /// our standard `HashMap` Cache implementation)
-#[cfg(feature = "cache")]
 pub trait Cache<C: CachedTypes> {
     fn get(&self, k: Snowflake) -> Option<&C>;
     fn push(&mut self, k: Snowflake, v: C) -> Option<C>;
@@ -129,7 +134,6 @@ pub trait Cache<C: CachedTypes> {
     fn len(&self) -> usize;
 }
 
-#[cfg(feature = "cache")]
 impl<V> Cache<V> for HashMap<Snowflake, V>
     where V: CachedTypes + Send {
     fn get(&self, k: Snowflake) -> Option<&V> {
@@ -152,4 +156,43 @@ impl<V> Cache<V> for HashMap<Snowflake, V>
     fn len(&self) -> usize {
         self.len()
     }
+}
+
+pub struct CacheRequest {
+    pub action: CacheAction,
+    pub cache_type: CacheType,
+    pub tx: tokio::sync::oneshot::Sender<CacheResponse>,
+}
+
+impl CacheRequest {
+    pub fn new (
+        action: CacheAction, 
+        cache_type: CacheType, 
+        tx: tokio::sync::oneshot::Sender<CacheResponse>
+    ) -> Self {
+        Self {action, cache_type, tx}
+    }
+}
+
+pub enum CacheAction {
+    Get(Snowflake),
+    Push((Snowflake, DiscordEvent)),
+    Remove(Snowflake),
+    Clear,
+    Len(usize),
+}
+
+pub enum CacheResponse {
+    DiscordObject(DiscordEvent),
+    DiscordObjectRef(&'static DiscordEvent),
+    Size(usize),
+    Ok,
+}
+
+pub enum CacheType {
+    Guild,
+    User,
+    Member,
+    VoiceState,
+    Channel,
 }

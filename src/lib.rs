@@ -79,5 +79,5 @@
 
 pub mod types;
 mod helpers;
-static API_URL: &str = "https://discord.com/api/v6";
-static GATEWAY_URL: &str = "wss://gateway.discord.gg";
+const API_URL: &str = "https://discord.com/api/v6";
+const GATEWAY_URL: &str = "wss://gateway.discord.gg";

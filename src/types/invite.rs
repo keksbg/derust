@@ -6,14 +6,14 @@ use crate::types::Snowflake;
 
 #[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct Invite {
-    pub(crate) code: String,
-    pub(crate) guild: Option<Guild>,
-    pub(crate) channel: Channel,
-    pub(crate) inviter: Option<User>,
-    pub(crate) target_user: Option<User>,
-    pub(crate) target_user_type: Option<TargetUserType>,
-    pub(crate) approximate_presence_count: Option<i32>,
-    pub(crate) approximate_member_count: Option<i32>,
+    pub code: String,
+    pub guild: Option<Guild>,
+    pub channel: Channel,
+    pub inviter: Option<User>,
+    pub target_user: Option<User>,
+    pub target_user_type: Option<TargetUserType>,
+    pub approximate_presence_count: Option<i32>,
+    pub approximate_member_count: Option<i32>,
 }
 
 #[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
@@ -23,9 +23,9 @@ pub enum TargetUserType {
 
 #[derive(Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct InviteMetadata {
-    pub(crate) uses: i32,
-    pub(crate) max_uses: i32,
-    pub(crate) max_age: i32,
-    pub(crate) temporary: bool,
-    pub(crate) created_at: Snowflake,
+    pub uses: i32,
+    pub max_uses: i32,
+    pub max_age: i32,
+    pub temporary: bool,
+    pub created_at: Snowflake,
 }

@@ -12,15 +12,15 @@ use serde::{Serialize, Deserialize};
 /// They are found in the `op` header of each payload.
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub enum OPCode {
-    Dispatch = 0,
-    Heartbeat = 1,
-    Identify = 2,
-    PresenceUpdate = 3,
-    VoiceStateUpdate = 4,
-    Resume = 6,
-    Reconnect = 7,
-    RequestGuildMembers = 8,
-    InvalidSession = 9,
+    Dispatch = 0, // y
+    Heartbeat = 1, // n
+    Identify = 2, // n
+    PresenceUpdate = 3, // n
+    VoiceStateUpdate = 4, // n
+    Resume = 6, // n
+    Reconnect = 7, // n
+    RequestGuildMembers = 8, // n
+    InvalidSession = 9, // n
     Hello = 10,
     HeartbeatACK = 11,
 }

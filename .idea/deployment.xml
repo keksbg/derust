@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="vm (8e044997-1b33-450e-aa28-de20b5d9d374)" autoUploadExternalChanges="true">
+  <component name="PublishConfigData" serverName="vm (8e044997-1b33-450e-aa28-de20b5d9d374)" autoUploadExternalChanges="true">
     <serverData>
       <paths name="vm (8e044997-1b33-450e-aa28-de20b5d9d374)">
         <serverdata>
@@ -13,6 +13,5 @@
         </serverdata>
       </paths>
     </serverData>
-    <option name="myAutoUpload" value="ALWAYS" />
   </component>
 </project>

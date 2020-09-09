@@ -6,24 +6,25 @@ use super::CachedTypes;
 
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct Channel {
-    pub(crate) id: Snowflake,
-    pub(crate) r#type: ChannelType,
-    pub(crate) guild_id: Option<Snowflake>,
-    pub(crate) position: Option<u16>,
-    pub(crate) permission_overwrites: Option<Vec<PermissionOverwrite>>,
-    pub(crate) name: Option<String>,
-    pub(crate) topic: Option<String>,
-    pub(crate) nsfw: Option<bool>,
-    pub(crate) last_message_id: Option<Snowflake>,
-    pub(crate) bitrate: Option<u32>,
-    pub(crate) user_limit: Option<u16>,
-    pub(crate) rate_limit_per_user: Option<u16>,
-    pub(crate) recipients: Option<Vec<User>>,
-    pub(crate) icon: Option<String>,
-    pub(crate) owner_id: Option<Snowflake>,
-    pub(crate) application_id: Option<Snowflake>,
-    pub(crate) parent_id: Option<Snowflake>,
-    pub(crate) last_pin_timestamp: Option<String>
+    pub id: Snowflake,
+    pub r#type: ChannelType,
+    pub guild_id: Option<Snowflake>,
+    pub position: Option<u16>,
+    pub permission_overwrites: Option<Vec<PermissionOverwrite>>,
+    pub name: Option<String>,
+    pub topic: Option<String>,
+    #[serde(default)]
+    pub nsfw: bool,
+    pub last_message_id: Option<Snowflake>,
+    pub bitrate: Option<u32>,
+    pub user_limit: Option<u16>,
+    pub rate_limit_per_user: Option<u16>,
+    pub recipients: Option<Vec<User>>,
+    pub icon: Option<String>,
+    pub owner_id: Option<Snowflake>,
+    pub application_id: Option<Snowflake>,
+    pub parent_id: Option<Snowflake>,
+    pub last_pin_timestamp: Option<String>
 }
 
 impl CachedTypes for Channel {}
@@ -50,14 +51,14 @@ pub enum ChannelType {
 
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct ChannelMention {
-    pub(crate) id: Snowflake,
-    pub(crate) guild_id: Snowflake,
-    pub(crate) r#type: ChannelType,
-    pub(crate) name: String,
+    pub id: Snowflake,
+    pub guild_id: Snowflake,
+    pub r#type: ChannelType,
+    pub name: String,
 }
 
 #[derive(Serialize, Clone, Debug, Eq, PartialEq)]
-pub(crate) struct CreatePrivateChannelBody {
+pub struct CreatePrivateChannelBody {
     pub recipient_id: Snowflake
 }
 

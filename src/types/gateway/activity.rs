@@ -30,7 +30,8 @@ pub struct Activity {
     pub(crate) party: Option<ActivityParty>,
     pub(crate) assets: Option<ActivityAssets>,
     pub(crate) secrets: Option<ActivitySecrets>,
-    pub(crate) instance: Option<bool>,
+    #[serde(default)]
+    pub(crate) instance: bool,
     pub(crate) flags: Option<ActivityFlags>
 }
 

@@ -10,15 +10,15 @@ use super::CachedTypes;
 /// that is returned by the Discord API.
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct User {
-    pub(crate) id: Snowflake,
-    pub(crate) username: String,
-    pub(crate) discriminator: String,
-    pub(crate) avatar: String,
-    pub(crate) verified: bool,
-    pub(crate) email: String,
-    pub(crate) flags: i64,
-    pub(crate) premium_type: PremiumType,
-    pub(crate) public_flags: i64,
+    pub id: Snowflake,
+    pub username: String,
+    pub discriminator: String,
+    pub avatar: String,
+    pub verified: bool,
+    pub email: String,
+    pub flags: i64,
+    pub premium_type: PremiumType,
+    pub public_flags: i64,
 }
 
 impl CachedTypes for User {}
